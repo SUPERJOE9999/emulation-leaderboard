@@ -773,6 +773,14 @@
                         <textarea id="submit-notes" placeholder="Any additional info..."></textarea>
                     </div>
 
+                    <div class="form-group">
+                        <label for="submit-screenshot">Screenshot Link (Optional)</label>
+                        <input type="url" id="submit-screenshot" placeholder="https://imgur.com/... or any image URL">
+                        <small style="color: var(--text-secondary); display: block; margin-top: 5px;">
+                            Link to your screenshot proof (e.g., Imgur, Google Drive, etc.)
+                        </small>
+                    </div>
+
                     <div class="modal-actions">
                         <button type="button" class="modal-btn secondary" onclick="closeSubmitModal()">Cancel</button>
                         <button type="submit" class="modal-btn primary" id="submit-btn">Submit Score</button>
@@ -1041,6 +1049,7 @@
                                         <th>Score</th>
                                         <th>Date</th>
                                         ${sortedEntries.some(e => e.notes) ? '<th>Notes</th>' : ''}
+                                        ${sortedEntries.some(e => e.screenshot) ? '<th class="center">Proof</th>' : ''}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1058,6 +1067,9 @@
                                                 <td class="date">${entry.date || 'N/A'}</td>
                                                 ${sortedEntries.some(e => e.notes) ? 
                                                     `<td class="notes">${entry.notes ? escapeHtml(entry.notes) : '-'}</td>` : 
+                                                    ''}
+                                                ${sortedEntries.some(e => e.screenshot) ? 
+                                                    `<td class="center">${entry.screenshot ? `<a href="${escapeHtml(entry.screenshot)}" target="_blank" rel="noopener noreferrer" title="View Screenshot" style="color: var(--accent-cyan); text-decoration: none; font-size: 1.2rem;">📸</a>` : '-'}</td>` : 
                                                     ''}
                                             </tr>
                                         `;
@@ -1081,6 +1093,7 @@
             document.getElementById('submit-gamertag').value = '';
             document.getElementById('submit-score').value = '';
             document.getElementById('submit-notes').value = '';
+            document.getElementById('submit-screenshot').value = '';
             document.getElementById('submit-modal').classList.add('active');
         }
 
@@ -1134,6 +1147,7 @@
             const gamertag = document.getElementById('submit-gamertag').value.trim();
             const score = document.getElementById('submit-score').value.trim();
             const notes = document.getElementById('submit-notes').value.trim();
+            const screenshot = document.getElementById('submit-screenshot').value.trim();
 
             try {
                 const response = await fetch(API_URL, {
@@ -1145,6 +1159,7 @@
                         player: gamertag,
                         score: score,
                         notes: notes,
+                        screenshot: screenshot,
                         date: new Date().toISOString().split('T')[0]
                     })
                 });
